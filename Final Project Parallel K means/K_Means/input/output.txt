@@ -1,4 +1,0 @@
-First occurrence t = 10.000000  with q = 0.599924
-Centers of the clusters:
-[1.500000, 1.000000, 2.000000]
-[4.500000, 3.500000, 2.000000]
