@@ -1,1 +1,1 @@
-# K-means
+# Parallel implementation of K-Means
