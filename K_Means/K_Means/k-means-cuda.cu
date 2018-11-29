@@ -85,7 +85,7 @@ void group_points_with_cuda(int* has_changed, Point* set_of_points, Cluster* k_c
 	cudaGetDeviceProperties(&device_prop, 0);
 
 	
-	num_of_threads = device_prop.maxThreadsPerBlock;
+	num_of_threads = device_prop.maxThreadsPerBlock / 2;
 
 	// Formula was taken from CUDA tutorial - https://www.nvidia.com/docs/IO/116711/sc11-cuda-c-basics.pdf, page 44
 	num_of_blocks = (set_of_points_size + num_of_threads - 1) / num_of_threads;
@@ -186,7 +186,7 @@ void set_position_by_time_with_cuda(Point* set_of_points, int set_of_points_size
 	cudaGetDeviceProperties(&device_prop, 0);
 
 
-	num_of_threads = device_prop.maxThreadsPerBlock;
+	num_of_threads = device_prop.maxThreadsPerBlock / 2;
 
 	// Formula was taken from CUDA tutorial - https://www.nvidia.com/docs/IO/116711/sc11-cuda-c-basics.pdf, page 44
 	num_of_blocks = (set_of_points_size + num_of_threads - 1) / num_of_threads;
@@ -230,6 +230,8 @@ void set_position_by_time_with_cuda(Point* set_of_points, int set_of_points_size
 		fprintf(stderr, "#2 cudaMemcpy failed!\n");
 		cuda_error(dev_points);
 	}
+
+	cudaFree(dev_points);
 }
 
 

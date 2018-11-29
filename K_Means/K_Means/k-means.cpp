@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 	if (myid == MASTER)
 	{
 		end_time = MPI_Wtime();
-		printf("time = %lf\n", end_time - start_time);
+		printf("K-Means done in %lf seconds\n", end_time - start_time);
 		fflush(stdout);
 	}
 	MPI_Finalize();
@@ -133,7 +133,13 @@ Point* read_from_file(File_info* file_info)
 		MPI_Abort(MPI_COMM_WORLD, 1);
 	}
 
-	fscanf(f, "%d %d %d %lf %lf %lf", &(file_info->N), &(file_info->K), &(file_info->T), &(file_info->dT), &(file_info->LIMIT), &(file_info->QM));
+	fscanf(f, "%d %d %lf %lf %lf %lf", &(file_info->N), &(file_info->K), &(file_info->T), &(file_info->dT), &(file_info->LIMIT), &(file_info->QM));
+
+	if (file_info->N < MIN_POINTS || file_info->N > MAX_POINTS)
+	{
+		printf("Number of points should be between 10,000 to 3,000,000. try again!\n");
+		MPI_Abort(MPI_COMM_WORLD, 1);
+	}
 
 	set_of_points = (Point*)malloc(sizeof(Point)*(file_info->N));
 
@@ -227,7 +233,6 @@ void classify_points(Cluster* k_clusters, File_info* file_info, Point* set_of_po
 {
 	double  iter;
 	int has_changed = 0, total_has_changed = 1;
-	double q = 0;
 
 	
 	for (iter = 0; iter <= file_info->LIMIT && total_has_changed > 0; iter++)
@@ -330,8 +335,8 @@ void recalculate_centroids(Cluster* k_clusters, int k_clusters_size)
 
 double evaluate_quality(Cluster* k_cluster, int k_cluster_size, Point* set_of_points, int set_of_points_size)
 {
-	int i, j, num_of_clusters_to_divide = k_cluster_size * (k_cluster_size - 1);
-	double quality = 0, distance;
+	int i, j = 0, num_of_clusters_to_divide = k_cluster_size * (k_cluster_size - 1);
+	double quality = 0, distance = 0;
 	
 	calculate_diameter(k_cluster, k_cluster_size, set_of_points, set_of_points_size);
 
@@ -425,7 +430,7 @@ void create_MPI_types(MPI_Datatype* File_info_MPI_type, MPI_Datatype* cluster_MP
 void create_file_info_MPI_type(MPI_Datatype* File_info_MPI_type)
 {
 	File_info file_info;
-	MPI_Datatype type[FILE_INFO_MEMBERS] = { MPI_INT, MPI_INT, MPI_INT, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE };
+	MPI_Datatype type[FILE_INFO_MEMBERS] = { MPI_INT, MPI_INT, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE };
 	int blocklen[FILE_INFO_MEMBERS] = { 1, 1, 1, 1, 1, 1 };
 	MPI_Aint disp[FILE_INFO_MEMBERS];
 

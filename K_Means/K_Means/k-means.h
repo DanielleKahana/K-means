@@ -1,8 +1,8 @@
 #pragma once
 #include <mpi.h>
 
-#define INPUT_FILE_NAME "C:\\Users\\idan\\Desktop\\input\\INPUT_FILE5.txt"
-#define OUTPUT_FILE_NAME "C:\\Users\\idan\\Desktop\\input\\OUTPUT_FILE5.txt"
+#define INPUT_FILE_NAME "D:\\INPUT_FILE.txt"
+#define OUTPUT_FILE_NAME "D:\\OUTPUT_FILE.txt"
 #define MASTER 0
 #define VELOCITY_MEMBERS 3
 #define POSITION_MEMBERS 3
@@ -10,6 +10,9 @@
 #define POINT_MEMBERS 4
 #define CLUSTER_MEMBERS 5
 #define FILE_INFO_MEMBERS 6
+#define MAX_POINTS 3000000
+#define MIN_POINTS 10000
+
 
 //structs
 typedef struct
@@ -52,8 +55,8 @@ typedef struct
 
 typedef struct
 {
-	int N, K, T;
-	double dT, LIMIT, QM;
+	int N, K;
+	double T, dT, LIMIT, QM;
 }File_info;
 
 
